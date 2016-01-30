@@ -62,7 +62,6 @@ class IrcNodePool(NodePool):
     def verify_no_memory_leak(self):
         for node in self.nodes:
             if node.memleak_amount() > 0:
-                print node.memleak_amount()
                 return False
         return True
 
