@@ -15,4 +15,4 @@ def grade(score, cond):
     color = 'green' if cond else 'red'
     got = score if cond else 0
     scores[current_test()] += got
-    click.secho('%s: %s' % (current_test(), got), fg=color, bold=True, err=True)
+    click.secho('%s: %s' % (current_test(), got), fg=color, bold=True)

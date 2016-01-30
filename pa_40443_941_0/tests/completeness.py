@@ -1,18 +1,18 @@
 import random
 from functools import partial
+from time import sleep
 
 from framework.grader import grade
 from framework.node import FULL_TRACK
 from framework.test import test
 from ..test_utils import build_tree, binary_tree, gen_token
-from .tricky import msg_to_nowhere
 from .leave import change_parent, explicit_exit
 from .messaging import simple_sendmsg
 
 
-@test(requires=[simple_sendmsg, change_parent, explicit_exit, msg_to_nowhere])
+@test(requires=[simple_sendmsg, change_parent, explicit_exit])
 def mixed_scenario(nodes):
-    node_count = 3
+    node_count = 31
     nodes.extend(build_tree(
         binary_tree(node_count),
         opts={i: {FULL_TRACK: True} for i in range(1, node_count + 1)},
@@ -29,7 +29,7 @@ def mixed_scenario(nodes):
     for cmd in cmds:
         cmd()
 
-    if nodes.verify_clean_exit():
-        grade(4, True)
-        grade(8, nodes.verify_no_memory_leak())
-        grade(8, nodes.verify_no_open_sockets())
+    clean = nodes.verify_clean_exit()
+    grade(4, clean)
+    grade(8, clean and nodes.verify_no_memory_leak())
+    grade(8, clean and nodes.verify_no_open_sockets())

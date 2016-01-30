@@ -1,8 +1,11 @@
 import re
 import uuid
+from os import makedirs
+
 import sarge
 from time import sleep
 from xml.dom.minidom import parse
+from framework.grader import config, current_test
 
 FULL_TRACK = 'full_track'
 
@@ -15,7 +18,12 @@ class Node(object):
         self.cmd = '/bin/false'
         self.full_track = kwargs.get(FULL_TRACK, False)
 
+    @property
+    def base_log_path(self):
+        return '%s/%s/%s/' % (config['log_path'], current_test(), self.uuid)
+
     def run(self):
+        makedirs(self.base_log_path)
         if self.full_track:
             self.cmd = ' '.join([
                 'valgrind',
@@ -23,16 +31,17 @@ class Node(object):
                 '--tool=memcheck', '--leak-check=full',
                 '--track-fds=yes',
                 '--xml=yes --xml-file=%s' % self.valgrind_xml_path,
-                # '--log-file=%s' % self.valgrind_log_path,
+                '--log-file=%s' % self.valgrind_log_path,
                 '%s' % self.cmd,
             ])
         self.cmd = 'stdbuf -oL -eL %s' % self.cmd
-
+        with open('%s/cmd' % self.base_log_path, 'w') as cmd_file:
+            print >> cmd_file, self.cmd
+        self.cmd = '%s 2>%s/stderr | tee %s/stdout' % (self.cmd, self.base_log_path, self.base_log_path)
         self.proc = sarge.run(
             self.cmd,
             input=self.feeder,
             stdout=sarge.Capture(),
-            stderr=sarge.Capture(),
             async=True,
         )
 
@@ -54,14 +63,15 @@ class Node(object):
 
     @property
     def valgrind_xml_path(self):
-        return './tmp/valgrind_%s.xml' % self.uuid
+        return '%s/valgrind.xml' % self.base_log_path
 
     @property
     def valgrind_log_path(self):
-        return './tmp/valgrind_%s.log' % self.uuid
+        return '%s/valgrind.log' % self.base_log_path
 
     def open_sockets(self):
-        log = self.proc.stderr.text
+        with open(self.valgrind_log_path, 'r') as log_file:
+            log = log_file.read()
         open_fds = log[log.rfind('FILE DESCRIPTORS: '):]
         return re.findall(r'Open AF_INET socket[^\n]*', open_fds)
 

@@ -55,7 +55,7 @@ class IrcNodePool(NodePool):
         sleep(1)
         for node in self.nodes:
             node.proc.commands[0].poll()
-            if node.proc.returncode != 0:
+            if node.proc.commands[0].returncode != 0:
                 return False
         return True
 

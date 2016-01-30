@@ -13,6 +13,7 @@ class IrcNode(Node):
         self.id = id
         self.address = kwargs.get('address', '127.0.0.1')
         bin = kwargs.get('bin', 'student')
+        self.uuid = '%s_%s' % (bin, self.uuid)
         if bin == 'model':
             bin = config.get('model_bin', config['student_bin'])
         else:

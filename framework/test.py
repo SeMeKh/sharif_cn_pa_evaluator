@@ -33,7 +33,7 @@ def test(requires=None):
                     if your_score < min_score:
                         msg = "Skipping `%s` since your score in `%s` (%d) does not meet the minimum requirement (%d)." % (
                             current_test(), test_name, your_score, min_score)
-                        click.secho(msg, err=True, fg='blue', bold=True)
+                        click.secho(msg, fg='blue', bold=True)
                         return
                 return func(*args, **kwargs)
 
