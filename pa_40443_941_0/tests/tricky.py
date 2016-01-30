@@ -2,6 +2,7 @@ from time import sleep
 from framework.grader import grade
 from framework.test import test
 from ..test_utils import build_tree, binary_tree, gen_token
+from .basics import join
 from .messaging import simple_sendmsg
 
 
@@ -18,7 +19,7 @@ def msg_to_nowhere(nodes):
     )
 
 
-@test()
+@test(requires=join)
 def sudden_leave(nodes):
     nodes.extend(build_tree({1: {2: {3: {}}}}))
     nodes[2].kill()
@@ -32,7 +33,7 @@ def sudden_leave(nodes):
     )
 
 
-@test()
+@test(requires=join)
 def setparent_cycle(nodes):
     nodes.extend(build_tree({1: {2: {3: {}}}}))
     nodes[1].setparent_node(nodes[3])
