@@ -1,9 +1,10 @@
 from framework.grader import grade
 from framework.test import test
-from pa_40443_941_0.test_utils import build_tree, gen_token
-from pa_40443_941_0.tests.basics import join
-from pa_40443_941_0.tests.leave import explicit_exit
-from pa_40443_941_0.tests.messaging import sendmsg, broadcast
+from ..test_utils import build_tree, gen_token
+from .basics import join
+from .leave import explicit_exit
+from .messaging import simple_sendmsg
+from .broadcast import propagate
 
 
 @test(requires=[join, explicit_exit])
@@ -26,7 +27,7 @@ def type1x(nodes):
     )
 
 
-@test(requires=[type1x, sendmsg, broadcast])
+@test(requires=[type1x, simple_sendmsg, propagate])
 def type2x_30(nodes):
     nodes.extend(build_tree({1: {2: {3: {}}}}, {2: {'bin': 'model'}}))
 

@@ -7,10 +7,10 @@ from framework.test import test
 from ..test_utils import build_tree, binary_tree, gen_token
 from .tricky import msg_to_nowhere
 from .leave import change_parent, explicit_exit
-from .messaging import sendmsg
+from .messaging import simple_sendmsg
 
 
-@test(requires=[sendmsg, change_parent, explicit_exit, msg_to_nowhere])
+@test(requires=[simple_sendmsg, change_parent, explicit_exit, msg_to_nowhere])
 def mixed_scenario(nodes):
     node_count = 3
     nodes.extend(build_tree(

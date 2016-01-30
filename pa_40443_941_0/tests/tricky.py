@@ -2,10 +2,10 @@ from time import sleep
 from framework.grader import grade
 from framework.test import test
 from ..test_utils import build_tree, binary_tree, gen_token
-from .messaging import sendmsg
+from .messaging import simple_sendmsg
 
 
-@test(requires=sendmsg)
+@test(requires=simple_sendmsg)
 def msg_to_nowhere(nodes):
     nodes.extend(build_tree(binary_tree(7)))
     nodes[3].sendmsg(8, gen_token())

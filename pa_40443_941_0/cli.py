@@ -11,7 +11,8 @@ from pa_40443_941_0.tests.basics import basic_print, join
 from pa_40443_941_0.tests.completeness import mixed_scenario
 from pa_40443_941_0.tests.conformance import type1x, type2x_30
 from pa_40443_941_0.tests.leave import explicit_exit, change_parent
-from pa_40443_941_0.tests.messaging import sendmsg, broadcast
+from pa_40443_941_0.tests.messaging import simple_sendmsg
+from pa_40443_941_0.tests.broadcast import propagate
 from pa_40443_941_0.tests.tricky import self_message, setparent_cycle, sudden_leave, msg_to_nowhere
 from pa_40443_941_0.tests.violation import m20_from_parent, m21_from_child, m30_from_child, invalid_message
 from pa_40443_941_0.utils import IrcNodePool
@@ -52,8 +53,8 @@ def run(student_bin, model_bin):
                 explicit_exit,
                 change_parent,
             ] + [
-                sendmsg,
-                broadcast,
+                simple_sendmsg,
+                propagate,
             ] + [
                 self_message,
                 setparent_cycle,
